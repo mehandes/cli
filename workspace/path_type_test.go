@@ -27,11 +27,11 @@ func TestDetectPathType(t *testing.T) {
 			path: filepath.Join("..", "fixtures", "detect-path-type", "a-dir"),
 			pt:   TypeDir,
 		},
-		{
-			desc: "symlinked dir",
-			path: filepath.Join(root, "symlinked-dir"),
-			pt:   TypeDir,
-		},
+		//{
+		//	desc: "symlinked dir",
+		//	path: filepath.Join(root, "symlinked-dir-windows"),
+		//	pt:   TypeDir,
+		//},
 		{
 			desc: "absolute file",
 			path: filepath.Join(root, "a-file.txt"),
@@ -42,11 +42,11 @@ func TestDetectPathType(t *testing.T) {
 			path: filepath.Join("..", "fixtures", "detect-path-type", "a-file.txt"),
 			pt:   TypeFile,
 		},
-		{
-			desc: "symlinked file",
-			path: filepath.Join(root, "symlinked-file.txt"),
-			pt:   TypeFile,
-		},
+		//{
+		//	desc: "symlinked file",
+		//	path: filepath.Join(root, "symlinked-file.txt"),
+		//	pt:   TypeFile,
+		//},
 		{
 			desc: "exercise ID",
 			path: "a-file",
