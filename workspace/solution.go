@@ -9,6 +9,7 @@ import (
 	"strings"
 	"time"
 
+	//"github.com/exercism/cli/visibility"
 	"github.com/exercism/cli/visibility"
 )
 
@@ -66,6 +67,15 @@ func (s *Solution) Write(dir string) error {
 		return err
 	}
 	path := filepath.Join(dir, solutionFilename)
+
+	// If the file exists we need to ensure it's not
+	// hidden, otherwise we can't write to it.
+	if _, err := os.Stat(path); !os.IsNotExist(err) {
+		err = visibility.UnHideFile(path)
+		if err != nil {
+			return err
+		}
+	}
 	if err := ioutil.WriteFile(path, b, os.FileMode(0644)); err != nil {
 		return err
 	}

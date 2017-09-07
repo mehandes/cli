@@ -1,12 +1,12 @@
 package workspace
 
 import (
-	"io/ioutil"
-	"os"
 	"testing"
-	"time"
 
 	"github.com/stretchr/testify/assert"
+	"time"
+	"io/ioutil"
+	"os"
 )
 
 func TestSolution(t *testing.T) {

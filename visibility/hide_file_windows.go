@@ -1,6 +1,8 @@
 package visibility
 
-import "syscall"
+import (
+	"syscall"
+)
 
 // HideFile sets a Windows file's 'hidden' attribute.
 // This is the equivalent of giving a filename on
@@ -23,5 +25,22 @@ func HideFile(path string) error {
 	}
 
 	attributes |= syscall.FILE_ATTRIBUTE_HIDDEN
+	return syscall.SetFileAttributes(ptr, attributes)
+}
+
+// UnHideFile unsets a Windows file's 'hidden' attribute,
+// essentially reversing HideFile().
+func UnHideFile(path string) error {
+	ptr, err := syscall.UTF16PtrFromString(path)
+	if err != nil {
+		return err
+	}
+	attributes, err := syscall.GetFileAttributes(ptr)
+	if err != nil {
+		return err
+	}
+
+	mask := ^(syscall.FILE_ATTRIBUTE_HIDDEN)
+	attributes &= uint32(mask)
 	return syscall.SetFileAttributes(ptr, attributes)
 }
