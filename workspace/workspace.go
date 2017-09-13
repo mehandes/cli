@@ -47,7 +47,7 @@ func (ws Workspace) Locate(exercise string) ([]string, error) {
 			return nil, ErrNotInWorkspace(exercise)
 		}
 
-		src, err := filepath.EvalSymlinks(dir)
+		src, err := evalSymlinksNonNormalised(dir)
 		if err == nil {
 			return []string{src}, nil
 		}
@@ -63,7 +63,7 @@ func (ws Workspace) Locate(exercise string) ([]string, error) {
 	walkFn := func(path string, info os.FileInfo, err error) error {
 		// If it's a symlink, follow it, then get the file info of the target.
 		if info.Mode()&os.ModeSymlink == os.ModeSymlink {
-			src, err := filepath.EvalSymlinks(path)
+			src, err := evalSymlinksNonNormalised(path)
 			if err == nil {
 				path = src
 			}
@@ -92,7 +92,7 @@ func (ws Workspace) Locate(exercise string) ([]string, error) {
 
 	// If the workspace directory is a symlink, resolve that first.
 	root := ws.Dir
-	src, err := filepath.EvalSymlinks(root)
+	src, err := evalSymlinksNonNormalised(root)
 	if err == nil {
 		root = src
 	}
@@ -103,6 +103,15 @@ func (ws Workspace) Locate(exercise string) ([]string, error) {
 		return nil, ErrNotExist(exercise)
 	}
 	return paths, nil
+}
+
+func evalSymlinksNonNormalised(path string) (string, error) {
+	volume := filepath.VolumeName(path)
+	src, err := filepath.EvalSymlinks(path)
+	if len(volume) == 2 {
+		return volume + src[2:], err
+	}
+	return src, err
 }
 
 // SolutionPath returns the full path where the exercise will be stored.
